@@ -2,28 +2,31 @@
 class Aklog < Formula
   desc "Android & HarmonyOS developer's Swiss Army Knife for Log"
   homepage "https://github.com/wswenyue/aklog"
-  version "5.3.29"
+  version "5.3.30"
 
-  depends_on "python"
+  # Use system python3 when available; otherwise install via Homebrew.
+  depends_on "python" if which("python3").nil? && which("python").nil?
 
   on_macos do
     on_arm do
-      url "https://github.com/wswenyue/aklog/releases/download/v5.3.29/aklog-5.3.29-darwin-arm64.tar.gz"
-      sha256 "a49d9636a9bb19d837d371520410e3956239f37a26200549699764ab6376e61c"
+      url "https://github.com/wswenyue/aklog/releases/download/v5.3.30/aklog-5.3.30-darwin-arm64.tar.gz"
+      sha256 "01d5c9a231b412a7220f7c7c6c12659d6e5821b57317e5e1a8b6fa9c14656fc4"
     end
     on_intel do
-      url "https://github.com/wswenyue/aklog/archive/v5.3.29.tar.gz"
-      sha256 "72449ba9c4e018d6520c2c50acf34cf821b1c9d9d57ef26223d2e690aabe63d0"
+      url "https://github.com/wswenyue/aklog/archive/v5.3.30.tar.gz"
+      sha256 "b32e0c6f2a2a8c610e3c920d07335f7acf8b071c54ec080f85506827ea185cc6"
     end
+  end
+
+  def selected_python
+    which("python3") || which("python") || Formula["python"].opt_bin/"python3"
   end
 
   def install
     libexec.install Dir["*"]
-    bin.install libexec/"aklog" => "aklog"
-    inreplace bin/"aklog", "exe_path", libexec.to_s
-    python = Formula["python"].opt_bin/"python3"
-    inreplace bin/"aklog", "python3 -m aklog", "#{python} -m aklog"
-    inreplace bin/"aklog", "python -m aklog", "#{python} -m aklog"
+    inreplace libexec/"aklog", /^AKLOG_PYTHON=__AKLOG_PYTHON__$/,
+                "AKLOG_PYTHON=#{selected_python}"
+    bin.install_symlink libexec/"aklog"
   end
 
   def post_install
