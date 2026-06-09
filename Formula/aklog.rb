@@ -2,19 +2,19 @@
 class Aklog < Formula
   desc "Android & HarmonyOS developer's Swiss Army Knife for Log"
   homepage "https://github.com/wswenyue/aklog"
-  version "5.3.33"
+  version "5.3.34"
 
   # Use system python3 when available; otherwise install via Homebrew.
   depends_on "python" if which("python3").nil? && which("python").nil?
 
   on_macos do
     on_arm do
-      url "https://github.com/wswenyue/aklog/releases/download/v5.3.33/aklog-5.3.33-darwin-arm64.tar.gz"
-      sha256 "69c40271acc86695e21809dad2beeb1371d90b401862cfc9af4abfe975b8155c"
+      url "https://github.com/wswenyue/aklog/releases/download/v5.3.34/aklog-5.3.34-darwin-arm64.tar.gz"
+      sha256 "b4b22264c7f2f9a56ce74cfd76e3196118bf64cac07be2b01c191067c7a46864"
     end
     on_intel do
-      url "https://github.com/wswenyue/aklog/archive/v5.3.33.tar.gz"
-      sha256 "ee399e7d6b972d99f590fe7e588c45c7027e67c61bb5d71ca172bc746b225dba"
+      url "https://github.com/wswenyue/aklog/archive/v5.3.34.tar.gz"
+      sha256 "c63cd738b624de25238d614656130408c04d28ef413b67c0a28d783860c7077d"
     end
   end
 
@@ -27,6 +27,7 @@ class Aklog < Formula
     inreplace libexec/"aklog", /^AKLOG_PYTHON=__AKLOG_PYTHON__$/,
                 "AKLOG_PYTHON=#{selected_python}"
     bin.install_symlink libexec/"aklog"
+    system selected_python, "-m", "pip", "install", "rich", "tomli"
   end
 
   def post_install
