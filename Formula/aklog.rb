@@ -2,19 +2,19 @@
 class Aklog < Formula
   desc "Android & HarmonyOS developer's Swiss Army Knife for Log"
   homepage "https://github.com/wswenyue/aklog"
-  version "5.3.41"
+  version "5.3.42"
 
   # Use system python3 when available; otherwise install via Homebrew.
   depends_on "python" if which("python3").nil? && which("python").nil?
 
   on_macos do
     on_arm do
-      url "https://github.com/wswenyue/aklog/releases/download/v5.3.41/aklog-5.3.41-darwin-arm64.tar.gz"
-      sha256 "3d7113fb7605a4c97637e1f35264054bef834451b93760bf963da8fee7566afb"
+      url "https://github.com/wswenyue/aklog/releases/download/v5.3.42/aklog-5.3.42-darwin-arm64.tar.gz"
+      sha256 "45ebe3ebd257e7d36287cc83b84271ac0f3b4872999e1173ed0d8175d55267f6"
     end
     on_intel do
-      url "https://github.com/wswenyue/aklog/archive/v5.3.41.tar.gz"
-      sha256 "5768db66bd736f75d999bbb78ff33733b1ea59f792dbb2918f5ee3df81b4b9e6"
+      url "https://github.com/wswenyue/aklog/archive/v5.3.42.tar.gz"
+      sha256 "e6054254428961aaf554c3fbdba2933ad21d561117994651e5fcd4588cdc7133"
     end
   end
 
@@ -28,8 +28,34 @@ class Aklog < Formula
                 "AKLOG_PYTHON=#{selected_python}"
     bin.install_symlink libexec/"aklog"
     system selected_python, "-m", "pip", "install", "rich", "tomli", "argcomplete"
-    bash_completion.install "contrib/bash/aklog"
-    zsh_completion.install "contrib/zsh/_aklog"
+    install_bash_completion
+    install_zsh_completion
+  end
+
+  def install_bash_completion
+    if (libexec/"contrib/bash/aklog").exist?
+      bash_completion.install libexec/"contrib/bash/aklog"
+    else
+      (bash_completion/"aklog").write <<~EOS
+        # bash completion for aklog
+        if type register-python-argcomplete &>/dev/null; then
+          eval "$(register-python-argcomplete aklog)"
+        fi
+      EOS
+    end
+  end
+
+  def install_zsh_completion
+    if (libexec/"contrib/zsh/_aklog").exist?
+      zsh_completion.install libexec/"contrib/zsh/_aklog"
+    else
+      (zsh_completion/"_aklog").write <<~EOS
+        #compdef aklog
+        if (( $+commands[register-python-argcomplete] )); then
+          eval "$(register-python-argcomplete aklog)"
+        fi
+      EOS
+    end
   end
 
   def post_install
