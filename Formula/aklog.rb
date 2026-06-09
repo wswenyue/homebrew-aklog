@@ -2,19 +2,19 @@
 class Aklog < Formula
   desc "Android & HarmonyOS developer's Swiss Army Knife for Log"
   homepage "https://github.com/wswenyue/aklog"
-  version "5.3.34"
+  version "5.3.36"
 
   # Use system python3 when available; otherwise install via Homebrew.
   depends_on "python" if which("python3").nil? && which("python").nil?
 
   on_macos do
     on_arm do
-      url "https://github.com/wswenyue/aklog/releases/download/v5.3.34/aklog-5.3.34-darwin-arm64.tar.gz"
-      sha256 "b4b22264c7f2f9a56ce74cfd76e3196118bf64cac07be2b01c191067c7a46864"
+      url "https://github.com/wswenyue/aklog/releases/download/v5.3.36/aklog-5.3.36-darwin-arm64.tar.gz"
+      sha256 "4fa0b819ffd56147c43d414c144978117f2e8fb8e6ebc09da8fe69142e916b3f"
     end
     on_intel do
-      url "https://github.com/wswenyue/aklog/archive/v5.3.34.tar.gz"
-      sha256 "c63cd738b624de25238d614656130408c04d28ef413b67c0a28d783860c7077d"
+      url "https://github.com/wswenyue/aklog/archive/v5.3.36.tar.gz"
+      sha256 "f9c6710576a64ba22eeada009df66b48b33338591ab3c0c531d528b5110f0dbf"
     end
   end
 
