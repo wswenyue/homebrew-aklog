@@ -2,19 +2,19 @@
 class Aklog < Formula
   desc "Android & HarmonyOS developer's Swiss Army Knife for Log"
   homepage "https://github.com/wswenyue/aklog"
-  version "5.3.42"
+  version "5.3.43"
 
   # Use system python3 when available; otherwise install via Homebrew.
   depends_on "python" if which("python3").nil? && which("python").nil?
 
   on_macos do
     on_arm do
-      url "https://github.com/wswenyue/aklog/releases/download/v5.3.42/aklog-5.3.42-darwin-arm64.tar.gz"
-      sha256 "45ebe3ebd257e7d36287cc83b84271ac0f3b4872999e1173ed0d8175d55267f6"
+      url "https://github.com/wswenyue/aklog/releases/download/v5.3.43/aklog-5.3.43-darwin-arm64.tar.gz"
+      sha256 "27807a2db6a010741842f228946501433f45c1672ebacb283bbfb71a9093323d"
     end
     on_intel do
-      url "https://github.com/wswenyue/aklog/archive/v5.3.42.tar.gz"
-      sha256 "e6054254428961aaf554c3fbdba2933ad21d561117994651e5fcd4588cdc7133"
+      url "https://github.com/wswenyue/aklog/archive/v5.3.43.tar.gz"
+      sha256 "28c69a00c346d21ff598334ea38dc1cb2591a013c83edec60908a2551274d6f2"
     end
   end
 
@@ -23,18 +23,19 @@ class Aklog < Formula
   end
 
   def install
+    # Install completions from buildpath before libexec.install moves the tree.
+    install_bash_completion
+    install_zsh_completion
     libexec.install Dir["*"]
     inreplace libexec/"aklog", /^AKLOG_PYTHON=__AKLOG_PYTHON__$/,
                 "AKLOG_PYTHON=#{selected_python}"
     bin.install_symlink libexec/"aklog"
     system selected_python, "-m", "pip", "install", "rich", "tomli", "argcomplete"
-    install_bash_completion
-    install_zsh_completion
   end
 
   def install_bash_completion
-    if (libexec/"contrib/bash/aklog").exist?
-      bash_completion.install libexec/"contrib/bash/aklog"
+    if (buildpath/"contrib/bash/aklog").exist?
+      bash_completion.install "contrib/bash/aklog"
     else
       (bash_completion/"aklog").write <<~EOS
         # bash completion for aklog
@@ -46,8 +47,8 @@ class Aklog < Formula
   end
 
   def install_zsh_completion
-    if (libexec/"contrib/zsh/_aklog").exist?
-      zsh_completion.install libexec/"contrib/zsh/_aklog"
+    if (buildpath/"contrib/zsh/_aklog").exist?
+      zsh_completion.install "contrib/zsh/_aklog"
     else
       (zsh_completion/"_aklog").write <<~EOS
         #compdef aklog
